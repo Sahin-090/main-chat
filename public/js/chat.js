@@ -1549,6 +1549,7 @@ function openMedia(type, url) {
         <button type="button" onclick="zoomMedia(0.25)" title="Zoom in">+</button>
         <button type="button" onclick="downloadMedia('${url}')" title="Download">⬇</button>
         <button type="button" onclick="shareMedia('${url}')" title="Share">↗</button>
+        <button type="button" onclick="closeModal('mediaModal')" title="Close">✕</button>
       </div>
       <div class="media-modal-img-wrap"><img id="mediaModalImg" src="${url}"></div>`;
   }

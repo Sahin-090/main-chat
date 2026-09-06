@@ -456,10 +456,14 @@ a { color: var(--accent); text-decoration: none; }
 .recording-cancel { background: rgba(255,255,255,0.12); color: inherit; }
 .recording-send { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; }
 
-/* ---- Media modal toolbar (zoom / download / share) ---- */
+/* ---- Media modal toolbar (zoom / download / share / close) ---- */
+#mediaModalContent {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  padding-top: max(10px, env(safe-area-inset-top));
+}
 .media-modal-toolbar {
-  position: absolute; top: 8px; right: 8px; display: flex; gap: 8px; z-index: 2;
-  padding: 4px; border-radius: 24px; background: rgba(0,0,0,0.28);
+  position: static; display: flex; gap: 8px; z-index: 2; flex-wrap: wrap;
+  justify-content: center; padding: 4px 6px; border-radius: 24px; background: rgba(0,0,0,0.28);
 }
 .media-modal-toolbar button {
   width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer;
@@ -468,9 +472,11 @@ a { color: var(--accent); text-decoration: none; }
   flex-shrink: 0;
 }
 .media-modal-toolbar button:hover { background: rgba(255,255,255,0.26); }
+.media-modal-toolbar button[title="Close"] { background: rgba(244,63,94,0.35); }
+.media-modal-toolbar button[title="Close"]:hover { background: rgba(244,63,94,0.55); }
 .media-modal-img-wrap {
   overflow: hidden; touch-action: none; position: relative;
-  width: 92vw; height: 88vh; max-width: 92vw; max-height: 88vh;
+  width: 92vw; height: 76vh; max-width: 92vw; max-height: 76vh;
   display: flex; align-items: center; justify-content: center;
 }
 .media-modal-img-wrap img {
