@@ -161,8 +161,22 @@ app.use(
           // won't even fetch the new bytes to notice they changed.
           res.setHeader('Cache-Control', 'no-cache');
           res.setHeader('Service-Worker-Allowed', '/');
-        } else if (/\.(css|js|png|jpg|jpeg|gif|svg|webp|woff2?|ttf|ico)$/i.test(filePath)) {
-          res.setHeader('Cache-Control', 'public, max-age=86400'); // 1 day for static assets
+        } else if (/\.(css|js)$/i.test(filePath)) {
+          // Same problem as sw.js above applies to the app's own CSS/JS:
+          // with a 1-day max-age, any phone/browser that already loaded the
+          // app today keeps serving the OLD (possibly buggy) style.css /
+          // chat.js straight from its local disk cache for up to 24h,
+          // completely ignoring that a fix was deployed - "works on
+          // desktop (fresh load), still broken on mobile (cached)" is the
+          // classic symptom of this. `no-cache` forces a fast conditional
+          // revalidation (304) on every load instead, so a deploy is live
+          // everywhere immediately. Pair this with bumping the `?v=` query
+          // string on the <link>/<script> tags (see the HTML files) and the
+          // Service Worker's CACHE_VERSION on every future deploy, so
+          // already-open tabs and installed PWAs pick up the change too.
+          res.setHeader('Cache-Control', 'no-cache');
+        } else if (/\.(png|jpg|jpeg|gif|svg|webp|woff2?|ttf|ico)$/i.test(filePath)) {
+          res.setHeader('Cache-Control', 'public, max-age=86400'); // 1 day - fine for images/fonts, they rarely change
         } else {
           res.setHeader('Cache-Control', 'no-cache'); // HTML always revalidated
         }

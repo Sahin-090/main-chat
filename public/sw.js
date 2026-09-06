@@ -15,14 +15,19 @@
  *    offline, but always prefers fresh content when online.
  */
 
-const CACHE_VERSION = 'cute-shell-v1';
+// Bump this on every deploy that changes any file below (or any CSS/JS
+// referenced by the HTML pages). Bumping it forces every already-installed
+// PWA / mobile browser to drop its old cached shell on next load instead of
+// silently keeping stale HTML/CSS/JS around - see the note on the static
+// asset Cache-Control headers in server.js for the other half of this fix.
+const CACHE_VERSION = 'cute-shell-v2';
 const APP_SHELL = [
   '/',
   '/chat',
-  '/css/style.css',
-  '/js/api.js',
-  '/js/ui-helpers.js',
-  '/js/chat.js',
+  '/css/style.css?v=2',
+  '/js/api.js?v=2',
+  '/js/ui-helpers.js?v=2',
+  '/js/chat.js?v=2',
   '/manifest.webmanifest',
   '/icons/icon-192.png',
   '/icons/icon-512.png',

@@ -765,12 +765,30 @@ a { color: var(--accent); text-decoration: none; }
   /* ---------- Mobile header ---------- */
   .chat-window-header {
     padding: 10px 12px;
-    gap: 10px;
+    gap: 8px;
+    flex-wrap: nowrap;      /* never let icons wrap to a second row */
+    overflow: hidden;       /* belt-and-braces: clip instead of overflow-scroll on very narrow phones */
+  }
+  /* Every fixed-size piece of the header (back arrow, avatar, action icons)
+     must refuse to shrink - only .chat-header-info (name/status) is allowed
+     to give up space and ellipsis. Without this, narrow phones can squash
+     the avatar/icons into slivers or push them out of view entirely. */
+  .chat-window-header .back-btn,
+  .chat-window-header .avatar,
+  .chat-window-header > .btn-icon {
+    flex-shrink: 0;
   }
   .chat-window-header .avatar { width: 38px; height: 38px; font-size: 13px; }
-  .chat-header-info { display: flex; flex-direction: column; justify-content: center; gap: 1px; }
-  .chat-header-name { font-size: 14.5px; line-height: 1.25; }
-  .chat-header-sub { font-size: 11.5px; line-height: 1.25; }
+  .chat-header-info { display: flex; flex-direction: column; justify-content: center; gap: 1px; flex: 1; min-width: 0; }
+  .chat-header-name { font-size: 14.5px; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chat-header-sub { font-size: 11.5px; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* On the tightest phones, drop the header's own left/right padding and
+     shrink the action icons slightly rather than letting anything overflow. */
+  @media (max-width: 360px) {
+    .chat-window-header { padding: 8px 8px; gap: 6px; }
+    .chat-window-header > .btn-icon { width: 34px; height: 34px; }
+    .chat-window-header .back-btn { width: 30px; }
+  }
   .sidebar-header { padding: 12px 14px; }
   .me-info .avatar { width: 38px; height: 38px; font-size: 13px; }
 
