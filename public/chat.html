@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Cute</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#6366f1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cute">
+<link rel="apple-touch-icon" href="/icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
+</head>
+<body data-theme="dark">
+
+<div class="chat-app view-list" id="chatApp">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar glass" id="sidebar" style="position:relative;">
+    <div class="sidebar-header">
+      <div class="me-info" id="meInfo" onclick="openProfileModal()" title="Edit profile">
+        <div class="avatar" id="meAvatar"></div>
+        <div>
+          <div class="me-name" id="meName">—</div>
+          <div class="me-role" id="meRole">Online</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-icon pwa-install-icon-btn hidden" data-pwa-install title="Install App">📲</button>
+        <button class="btn-icon" onclick="openNotificationSettings()" title="Notification Settings">🔔</button>
+        <button class="btn-icon" onclick="Theme.toggle()"><span class="theme-icon">🌙</span></button>
+        <button class="btn-icon" id="adminLink" onclick="window.location.href='/admin'" title="Admin Dashboard" style="display:none">🛡️</button>
+        <button class="btn-icon" onclick="logout()" title="Logout">🚪</button>
+      </div>
+    </div>
+
+    <div class="sidebar-tabs">
+      <div class="sidebar-tab active" data-tab="chats" onclick="switchSidebarTab('chats')">💬 Chats</div>
+      <div class="sidebar-tab" data-tab="groups" onclick="switchSidebarTab('groups')">👥 Groups</div>
+    </div>
+
+    <div class="search-box">
+      <div class="input-wrap glass">
+        <span class="icon">🔍</span>
+        <input type="text" id="userSearchInput" placeholder="Search people or groups...">
+      </div>
+    </div>
+    <div class="search-results-panel glass hidden" id="searchResultsPanel"></div>
+
+    <div class="chat-list" id="chatListChats"></div>
+    <div class="chat-list hidden" id="chatListGroups"></div>
+
+    <button class="fab" id="fabNew" title="New chat / group">+</button>
+
+    <div style="text-align:center;font-size:11px;opacity:0.45;padding:8px 0 4px;">Developed by Sahin</div>
+  </aside>
+
+  <!-- ============ CHAT WINDOW ============ -->
+  <main class="chat-window" id="chatWindow">
+    <div class="welcome-pane" id="welcomePane">
+      <div class="big-icon">💬</div>
+      <div style="font-size:18px;font-weight:700;">Select a chat to start messaging</div>
+      <div style="font-size:13px;">Your conversations are private and secure.</div>
+    </div>
+
+    <div class="hidden" id="activeChatArea" style="display:none;flex-direction:column;height:100%;">
+      <div class="chat-window-header glass">
+        <button class="btn-icon back-btn" onclick="backToList()">←</button>
+        <div class="avatar" id="chatHeaderAvatar"></div>
+        <div class="chat-header-info" id="chatHeaderInfo" onclick="openInfoModal()">
+          <div class="chat-header-name" id="chatHeaderName">—</div>
+          <div class="chat-header-sub" id="chatHeaderSub">—</div>
+        </div>
+        <button class="btn-icon" id="muteToggleBtn" onclick="toggleMuteActiveChat()" title="Mute notifications">🔔</button>
+        <button class="btn-icon" onclick="toggleMsgSearch()" title="Search messages">🔍</button>
+        <button class="btn-icon" onclick="openInfoModal()" title="Info">ℹ️</button>
+      </div>
+
+      <div class="glass hidden" id="msgSearchBar" style="padding:10px 16px;">
+        <div class="input-wrap">
+          <span class="icon">🔎</span>
+          <input type="text" id="msgSearchInput" placeholder="Search in this chat...">
+        </div>
+      </div>
+      <div class="search-results-panel glass hidden" id="msgSearchResults"></div>
+
+      <div class="messages-area" id="messagesArea"></div>
+      <div class="typing-indicator" id="typingIndicator"></div>
+
+      <div class="reply-preview glass hidden" id="replyPreview">
+        <div>
+          <div style="font-size:11px;color:var(--accent-2);font-weight:600;">Replying to <span id="replyToName"></span></div>
+          <div class="reply-preview-text" id="replyPreviewText"></div>
+        </div>
+        <button class="btn-icon" onclick="cancelReply()">✕</button>
+      </div>
+      <div class="edit-preview glass hidden" id="editPreview">
+        <div style="font-size:12px;color:var(--warning);font-weight:600;">✏️ Editing message</div>
+        <button class="btn-icon" onclick="cancelEdit()">✕</button>
+      </div>
+
+      <div class="reply-preview glass hidden" id="uploadStatusBar" style="justify-content:flex-start;gap:10px;">
+        <span>📎</span>
+        <div style="flex:1;min-width:0;">
+          <div id="uploadStatusName" style="font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+          <div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadStatusFill" style="width:0%"></div></div>
+        </div>
+        <button type="button" class="btn hidden" id="uploadStatusRetry" onclick="retryLastUpload()" style="font-size:12px;padding:4px 10px;">Retry</button>
+        <button class="btn-icon" onclick="dismissUploadStatus()">✕</button>
+      </div>
+
+      <div class="recording-bar hidden" id="recordingBar">
+        <span class="recording-dot"></span>
+        <span class="recording-time" id="recordingTime">0:00</span>
+        <span class="recording-hint">Recording voice message… max 5:00</span>
+        <button type="button" class="recording-cancel" onclick="cancelVoiceRecording()" title="Cancel">✕</button>
+        <button type="button" class="recording-send" onclick="stopAndSendVoiceRecording()" title="Send">➤</button>
+      </div>
+
+      <div class="emoji-panel glass hidden" id="emojiPanel"></div>
+
+      <div class="composer">
+        <button type="button" class="floating-btn floating-btn--attach" id="attachBtn" title="Attach file" aria-label="Attach file">
+          <span class="floating-btn-icon">📎</span>
+        </button>
+        <input type="file" id="fileInput" class="hidden">
+
+        <div class="composer-field">
+          <textarea class="composer-input" id="composerInput" placeholder="Type a message..." rows="1" maxlength="5000"></textarea>
+          <button type="button" class="btn-icon composer-emoji-btn" id="emojiBtn" title="Emoji" aria-label="Emoji">😊</button>
+        </div>
+
+        <div class="composer-action" id="composerAction">
+          <button type="button" class="floating-btn floating-btn--mic" id="micBtn" title="Record voice message" aria-label="Record voice message">
+            <span class="floating-btn-icon">🎤</span>
+          </button>
+          <button type="button" class="floating-btn floating-btn--send" id="sendBtn" title="Send message" aria-label="Send message">
+            <span class="floating-btn-icon">➤</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ MODAL: New Chat / Group / Join ============ -->
+<div class="modal-overlay hidden" id="newModal">
+  <div class="modal-box glass">
+    <div class="modal-title">
+      <span id="newModalTitle">Start something new</span>
+      <button class="btn-icon" onclick="closeModal('newModal')">✕</button>
+    </div>
+
+    <div class="auth-tabs" style="margin-bottom:18px;">
+      <div class="auth-tab active" id="newTabChat" onclick="switchNewTab('chat')">Private Chat</div>
+      <div class="auth-tab" id="newTabGroup" onclick="switchNewTab('group')">Group</div>
+    </div>
+
+    <!-- Find user for private chat -->
+    <div id="newChatPane">
+      <div class="field">
+        <label>Search by username</label>
+        <div class="input-wrap">
+          <span class="icon">👤</span>
+          <input type="text" id="newChatSearch" placeholder="Type a username...">
+        </div>
+      </div>
+      <div id="newChatResults" style="max-height:260px;overflow-y:auto;"></div>
+    </div>
+
+    <!-- Group create / join -->
+    <div id="newGroupPane" class="hidden">
+      <div class="auth-tabs" style="margin-bottom:18px;">
+        <div class="auth-tab active" id="grpTabCreate" onclick="switchGroupTab('create')">Create Group</div>
+        <div class="auth-tab" id="grpTabJoin" onclick="switchGroupTab('join')">Join Group</div>
+      </div>
+
+      <form id="createGroupForm">
+        <div class="field">
+          <label>Group Name</label>
+          <div class="input-wrap"><span class="icon">👥</span><input type="text" id="grpName" required minlength="3" maxlength="64" placeholder="e.g. Basirhat College CS Batch"></div>
+        </div>
+        <div class="field">
+          <label>Description (optional)</label>
+          <div class="input-wrap"><span class="icon">📝</span><input type="text" id="grpDesc" maxlength="255" placeholder="What's this group about?"></div>
+        </div>
+        <div class="field">
+          <label>Group Password</label>
+          <div class="input-wrap"><span class="icon">🔑</span><input type="password" id="grpPassword" required minlength="6" placeholder="Others need this to join"></div>
+        </div>
+        <div class="error-text" id="createGroupError"></div>
+        <button type="submit" class="btn btn-primary" style="width:100%">Create Group</button>
+      </form>
+
+      <form id="joinGroupForm" class="hidden">
+        <div class="field">
+          <label>Group Name</label>
+          <div class="input-wrap"><span class="icon">👥</span><input type="text" id="joinGrpName" required placeholder="Exact group name"></div>
+        </div>
+        <div class="field">
+          <label>Group Password</label>
+          <div class="input-wrap"><span class="icon">🔑</span><input type="password" id="joinGrpPassword" required placeholder="Ask the group owner"></div>
+        </div>
+        <div class="error-text" id="joinGroupError"></div>
+        <button type="submit" class="btn btn-primary" style="width:100%">Join Group</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Message context menu (long-press / right-click) ============ -->
+<div class="mcm-backdrop hidden" id="mcmBackdrop" onclick="closeMsgContextMenu()"></div>
+<div class="msg-context-menu hidden" id="msgContextMenu" role="menu" aria-label="Message actions">
+  <div class="mcm-handle"></div>
+  <div class="mcm-item" data-action="reply" role="menuitem">↩ <span>Reply</span></div>
+  <div class="mcm-item" data-action="edit" role="menuitem">✏️ <span>Edit</span></div>
+  <div class="mcm-item" data-action="copy" role="menuitem">📋 <span>Copy</span></div>
+  <div class="mcm-item" data-action="star" role="menuitem">⭐ <span id="mcmStarLabel">Star Message</span></div>
+  <div class="mcm-item" data-action="forward" role="menuitem">📤 <span>Forward</span></div>
+  <div class="mcm-item" data-action="info" role="menuitem">ℹ️ <span>Message Info</span></div>
+  <div class="mcm-item danger" data-action="deleteMe" role="menuitem">🗑 <span>Delete for Me</span></div>
+  <div class="mcm-item danger" data-action="deleteEveryone" role="menuitem">🗑 <span>Delete for Everyone</span></div>
+  <div class="mcm-item" data-action="cancel" role="menuitem">❌ <span>Cancel</span></div>
+</div>
+
+<!-- ============ Undo snackbar (Delete for Me) ============ -->
+<div class="snackbar hidden" id="undoSnackbar">
+  <span>Message deleted</span>
+  <button type="button" onclick="undoDelete()">UNDO</button>
+</div>
+
+<!-- ============ MODAL: Forward message ============ -->
+<div class="modal-overlay hidden" id="forwardModal">
+  <div class="modal-box glass">
+    <div class="modal-title">
+      <span>Forward to...</span>
+      <button class="btn-icon" onclick="closeModal('forwardModal')">✕</button>
+    </div>
+    <div id="forwardTargetsList" style="max-height:340px;overflow-y:auto;"></div>
+  </div>
+</div>
+
+<!-- ============ MODAL: Message Info ============ -->
+<div class="modal-overlay hidden" id="msgInfoModal">
+  <div class="modal-box glass">
+    <div class="modal-title">
+      <span>Message Info</span>
+      <button class="btn-icon" onclick="closeModal('msgInfoModal')">✕</button>
+    </div>
+    <div id="msgInfoBody"></div>
+  </div>
+</div>
+
+<!-- ============ MODAL: Chat/Group Info ============ -->
+<div class="modal-overlay hidden" id="infoModal">
+  <div class="modal-box glass">
+    <div class="modal-title">
+      <span>Details</span>
+      <button class="btn-icon" onclick="closeModal('infoModal')">✕</button>
+    </div>
+    <div id="infoModalBody"></div>
+  </div>
+</div>
+
+<!-- ============ MODAL: My Profile (nickname + picture) ============ -->
+<div class="modal-overlay hidden" id="profileModal">
+  <div class="modal-box glass">
+    <div class="modal-title">
+      <span>Edit Profile</span>
+      <button class="btn-icon" onclick="closeModal('profileModal')">✕</button>
+    </div>
+
+    <div class="profile-avatar-edit">
+      <div class="profile-avatar-wrap">
+        <div class="avatar" id="profileAvatarPreview"></div>
+        <div class="profile-avatar-edit-btn" onclick="document.getElementById('profileAvatarInput').click()" title="Change picture">📷</div>
+      </div>
+      <input type="file" id="profileAvatarInput" accept="image/*" class="hidden">
+      <span class="profile-avatar-remove hidden" id="profileAvatarRemove" onclick="removeProfileAvatar()">Remove picture</span>
+    </div>
+
+    <form id="profileForm">
+      <div class="field">
+        <label>Nickname</label>
+        <div class="input-wrap"><span class="icon">✏️</span><input type="text" id="profileDisplayName" required minlength="1" maxlength="64" placeholder="Your display name"></div>
+      </div>
+      <div class="error-text" id="profileFormError"></div>
+      <button type="submit" class="btn btn-primary" style="width:100%">Save Changes</button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL: Notification Settings ============ -->
+<div class="modal-overlay hidden" id="notifSettingsModal">
+  <div class="modal-box glass">
+    <div class="modal-title">
+      <span>Notification Settings</span>
+      <button class="btn-icon" onclick="closeModal('notifSettingsModal')">✕</button>
+    </div>
+
+    <div class="notif-settings-row">
+      <div>
+        <div class="notif-settings-label">🔔 Notifications</div>
+        <div class="notif-settings-sub">Get notified about new messages, even in the background</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="notifEnabledToggle" onchange="onNotifEnabledToggle(this.checked)">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="notif-settings-row">
+      <div>
+        <div class="notif-settings-label">💬 Message Preview</div>
+        <div class="notif-settings-sub">Show the message text inside notifications</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="notifPreviewToggle" onchange="onNotifPreviewToggle(this.checked)">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="notif-settings-hint hidden" id="notifPermissionHint">
+      Notifications are currently disabled. Please enable them from your browser settings. 💕
+    </div>
+    <div class="error-text" id="notifSettingsError"></div>
+  </div>
+</div>
+
+<!-- ============ MODAL: Image / Video preview ============ -->
+<div class="modal-overlay hidden" id="mediaModal" onclick="if(event.target===this) closeModal('mediaModal')">
+  <div id="mediaModalContent" style="max-width:92vw;max-height:88vh;position:relative;"></div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/ui-helpers.js"></script>
+<script src="/js/pwa.js"></script>
+<script src="/js/push.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/chat.js"></script>
+</body>
+</html>

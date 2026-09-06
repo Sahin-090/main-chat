@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - Cute</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#6366f1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cute">
+<link rel="apple-touch-icon" href="/icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
+</head>
+<body data-theme="dark">
+
+<div class="admin-layout">
+  <div class="admin-topbar glass">
+    <div style="display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;">
+      🛡️ Admin Dashboard
+    </div>
+    <div style="display:flex;gap:6px;">
+      <button class="btn-icon" onclick="Theme.toggle()"><span class="theme-icon">🌙</span></button>
+      <button class="btn-ghost btn" onclick="window.location.href='/chat'">Back to Chat</button>
+    </div>
+  </div>
+
+  <div class="admin-body">
+    <div class="stat-grid" id="statGrid"></div>
+
+    <div class="admin-tabs">
+      <div class="admin-tab active" data-tab="users" onclick="switchAdminTab('users')">👤 Users</div>
+      <div class="admin-tab" data-tab="groups" onclick="switchAdminTab('groups')">👥 Groups</div>
+      <div class="admin-tab" data-tab="logs" onclick="switchAdminTab('logs')">📜 Activity Logs</div>
+      <div class="admin-tab" data-tab="accounts" id="accountsTabBtn" onclick="switchAdminTab('accounts')">📋 Registered Accounts</div>
+    </div>
+
+    <div class="admin-panel glass" id="panelUsers"></div>
+    <div class="admin-panel glass hidden" id="panelGroups"></div>
+    <div class="admin-panel glass hidden" id="panelLogs"></div>
+    <div class="admin-panel glass hidden" id="panelAccounts"></div>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/ui-helpers.js"></script>
+<script src="/js/pwa.js"></script>
+<script src="/js/admin.js"></script>
+</body>
+</html>

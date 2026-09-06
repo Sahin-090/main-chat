@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Cute</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#6366f1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cute">
+<link rel="apple-touch-icon" href="/icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
+</head>
+<body data-theme="dark">
+
+<button class="btn-icon glass theme-toggle-fixed" onclick="Theme.toggle()">
+  <span class="theme-icon">🌙</span>
+</button>
+
+<div class="auth-page">
+  <div class="auth-card glass">
+    <div class="auth-logo">
+      <div class="logo-badge">🔐</div>
+    </div>
+    <div class="auth-title">Cute</div>
+    <div class="auth-subtitle">End-to-end structured, real-time & encrypted-at-rest chat</div>
+
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Login</div>
+      <div class="auth-tab" id="tabRegister" onclick="switchTab('register')">Register</div>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form id="loginForm">
+      <div class="field">
+        <label>Username</label>
+        <div class="input-wrap">
+          <span class="icon">👤</span>
+          <input type="text" id="loginUsername" autocomplete="username" required maxlength="20" placeholder="your.username">
+        </div>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <div class="input-wrap">
+          <span class="icon">🔑</span>
+          <input type="password" id="loginPassword" autocomplete="current-password" required placeholder="••••••••">
+        </div>
+      </div>
+      <div class="error-text" id="loginError"></div>
+      <button type="submit" class="btn btn-primary" style="width:100%" id="loginBtn">
+        <span id="loginBtnText">Login</span>
+      </button>
+    </form>
+
+    <!-- REGISTER FORM -->
+    <form id="registerForm" class="hidden">
+      <div class="field">
+        <label>Choose a Username</label>
+        <div class="input-wrap">
+          <span class="icon">👤</span>
+          <input type="text" id="regUsername" required minlength="3" maxlength="20" placeholder="e.g. sahin_dev">
+        </div>
+      </div>
+      <div class="field">
+        <label>Display Name</label>
+        <div class="input-wrap">
+          <span class="icon">✨</span>
+          <input type="text" id="regDisplayName" maxlength="64" placeholder="Optional - shown to others">
+        </div>
+      </div>
+      <div class="field">
+        <label>Create a Password</label>
+        <div class="input-wrap">
+          <span class="icon">🔑</span>
+          <input type="password" id="regPassword" required minlength="6" placeholder="Min 6 characters">
+        </div>
+      </div>
+      <div class="error-text" id="registerError"></div>
+      <button type="submit" class="btn btn-primary" style="width:100%" id="registerBtn">
+        <span id="registerBtnText">Create Account</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/ui-helpers.js"></script>
+<script src="/js/pwa.js"></script>
+<script>
+function switchTab(tab) {
+  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+  document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
+}
+
+function setLoading(btn, textEl, loading, label) {
+  btn.disabled = loading;
+  textEl.innerHTML = loading ? '<span class="spinner"></span>' : label;
+}
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errorEl = document.getElementById('loginError');
+  errorEl.textContent = '';
+  const btn = document.getElementById('loginBtn');
+  const btnText = document.getElementById('loginBtnText');
+  setLoading(btn, btnText, true, 'Login');
+
+  try {
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const data = await Api.post('/api/auth/login', { username, password });
+    localStorage.setItem('scs_user', JSON.stringify(data.user));
+    localStorage.setItem('scs_access_token', data.accessToken);
+    window.location.href = data.user.role === 'admin' ? '/chat' : '/chat';
+  } catch (err) {
+    errorEl.textContent = err.data?.message || err.message || 'Login failed.';
+  } finally {
+    setLoading(btn, btnText, false, 'Login');
+  }
+});
+
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errorEl = document.getElementById('registerError');
+  errorEl.textContent = '';
+  const btn = document.getElementById('registerBtn');
+  const btnText = document.getElementById('registerBtnText');
+  setLoading(btn, btnText, true, 'Create Account');
+
+  try {
+    const username = document.getElementById('regUsername').value.trim();
+    const displayName = document.getElementById('regDisplayName').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const data = await Api.post('/api/auth/register', { username, displayName, password });
+    localStorage.setItem('scs_user', JSON.stringify(data.user));
+    localStorage.setItem('scs_access_token', data.accessToken);
+    Toast.success('Account created! Redirecting...');
+    setTimeout(() => (window.location.href = '/chat'), 600);
+  } catch (err) {
+    errorEl.textContent = err.data?.message || err.message || 'Registration failed.';
+  } finally {
+    setLoading(btn, btnText, false, 'Create Account');
+  }
+});
+
+// If already logged in, skip straight to chat
+(async () => {
+  try {
+    const res = await fetch('/api/auth/me', { credentials: 'include' });
+    if (res.ok) window.location.href = '/chat';
+  } catch (e) { /* not logged in, stay here */ }
+})();
+</script>
+</body>
+</html>

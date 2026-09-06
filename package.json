@@ -1,0 +1,48 @@
+{
+  "name": "secure-chat-server",
+  "version": "1.0.0",
+  "description": "Production-ready real-time secure chat server with private chat, group chat, file sharing, and admin dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "db:init": "node scripts/initDb.js",
+    "test:push": "node test/push-flow.test.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "chat",
+    "socket.io",
+    "realtime",
+    "express",
+    "mysql",
+    "jwt"
+  ],
+  "author": "Sahin",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5",
+    "jsonwebtoken": "^9.0.2",
+    "bcrypt": "^5.1.1",
+    "helmet": "^7.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "multer": "^2.0.1",
+    "uuid": "^9.0.1",
+    "express-rate-limit": "^7.2.0",
+    "morgan": "^1.10.0",
+    "compression": "^1.7.4",
+    "mysql2": "^3.9.7",
+    "cookie-parser": "^1.4.6",
+    "xss": "^1.0.15",
+    "express-validator": "^7.0.1",
+    "web-push": "^3.6.7"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.8.3",
+    "node-fetch": "^2.7.0"
+  }
+}
