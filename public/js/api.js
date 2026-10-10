@@ -5,6 +5,15 @@
 const Api = (() => {
   let csrfToken = null;
 
+  // Prefixes relative URLs with BACKEND_URL (set in config.js) so the app
+  // still works unchanged when frontend + backend share an origin (default,
+  // BACKEND_URL === '') and also works when they're deployed separately.
+  function resolve(url) {
+    const base = window.BACKEND_URL || '';
+    if (!base || !url.startsWith('/')) return url;
+    return base.replace(/\/$/, '') + url;
+  }
+
   function getCookie(name) {
     const match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
     return match ? decodeURIComponent(match[1]) : null;
@@ -13,7 +22,7 @@ const Api = (() => {
   async function ensureCsrf() {
     csrfToken = getCookie('csrf_token');
     if (csrfToken) return csrfToken;
-    const res = await fetchOnce('/api/auth/csrf-token', { credentials: 'include' });
+    const res = await fetchOnce(resolve('/api/auth/csrf-token'), { credentials: 'include' });
     const data = await res.json();
     csrfToken = data.csrfToken;
     return csrfToken;
@@ -66,7 +75,7 @@ const Api = (() => {
 
     while (true) {
       try {
-        res = await fetchOnce(url, fetchOpts);
+        res = await fetchOnce(resolve(url), fetchOpts);
         break;
       } catch (networkErr) {
         attempt += 1;
@@ -108,7 +117,7 @@ const Api = (() => {
     return new Promise((resolve, reject) => {
       ensureCsrf().then((token) => {
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', url, true);
+        xhr.open('POST', resolve(url), true);
         xhr.withCredentials = true;
         xhr.setRequestHeader('X-CSRF-Token', token);
         xhr.upload.onprogress = (e) => {
@@ -148,5 +157,6 @@ const Api = (() => {
     del: (url, body) => request('DELETE', url, body),
     uploadFile,
     ensureCsrf,
+    resolve,
   };
 })();

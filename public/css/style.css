@@ -1115,3 +1115,262 @@ a { color: var(--accent); text-decoration: none; }
   .pwa-install-banner { left: 10px; right: 10px; bottom: 10px; padding: 12px; }
   .pwa-install-banner .pwa-subtitle { display: none; }
 }
+
+/* ============================================================
+   AI Assistant (floating icon + chat panel)
+   Additive only — reuses existing theme variables so it automatically
+   matches every theme (Purple default, Light, and any future themes)
+   without any extra styling work.
+   ============================================================ */
+
+.ai-fab {
+  position: fixed;
+  right: 18px;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 6px 24px rgba(99, 102, 241, 0.5);
+  cursor: pointer;
+  z-index: 150;
+  transition: var(--transition);
+}
+/* On the chat screen there's a real composer + the sidebar's own "+" fab to
+   clear, so it sits higher up than on the login/register page. */
+.ai-fab--chat-page {
+  bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+}
+.ai-fab:hover { transform: scale(1.06); }
+.ai-fab:active { transform: scale(0.96); }
+.ai-fab--loading { opacity: 0.65; pointer-events: none; }
+.ai-fab--loading .ai-fab-icon { animation: aiPulse 1s ease-in-out infinite; }
+
+@keyframes aiPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.ai-panel-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 210;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(2px);
+  padding: 0;
+}
+.ai-panel-overlay.hidden { display: none; }
+
+.ai-panel {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  background: var(--glass-bg, rgba(30, 30, 46, 0.97));
+  border: 1px solid var(--glass-border);
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.ai-panel-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px calc(14px);
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
+  border-bottom: 1px solid var(--glass-border);
+}
+.ai-panel-header-icon { font-size: 20px; }
+.ai-panel-header-title { flex: 1; font-weight: 700; font-size: 15px; color: var(--text-primary); }
+
+.ai-panel-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ai-empty-state {
+  margin: auto;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  max-width: 320px;
+  padding: 20px;
+}
+
+.ai-msg { display: flex; max-width: 100%; }
+.ai-msg--user { justify-content: flex-end; }
+.ai-msg--assistant { justify-content: flex-start; }
+
+.ai-msg-bubble {
+  max-width: 85%;
+  min-width: 0;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+.ai-msg--user .ai-msg-bubble {
+  background: var(--bubble-mine);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.ai-msg--assistant .ai-msg-bubble {
+  background: var(--bubble-theirs);
+  color: var(--text-primary);
+  border-bottom-left-radius: 4px;
+}
+.ai-msg--error .ai-msg-bubble { border: 1px solid var(--danger); }
+.ai-retry-btn {
+  margin-top: 4px;
+  align-self: flex-start;
+  background: none;
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.ai-markdown p { margin: 0 0 8px; }
+.ai-markdown p:last-child { margin-bottom: 0; }
+.ai-markdown h4 { margin: 4px 0 6px; font-size: 15px; }
+.ai-markdown ul, .ai-markdown ol { margin: 0 0 8px 18px; padding: 0; }
+.ai-markdown li { margin-bottom: 4px; }
+.ai-markdown a { color: var(--accent-2); word-break: break-all; }
+.ai-inline-code {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+}
+.ai-code-block { position: relative; margin: 8px 0; max-width: 100%; }
+.ai-code-block pre {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 12px 12px 12px;
+  overflow-x: auto;
+  max-width: 100%;
+  font-size: 12.5px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+}
+.ai-copy-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  padding: 3px 8px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.ai-typing-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  animation: aiTypingBlink 1.2s infinite ease-in-out;
+}
+.ai-typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.ai-typing-dot:nth-child(3) { animation-delay: 0.4s; margin-right: 0; }
+@keyframes aiTypingBlink {
+  0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-3px); }
+}
+
+.ai-panel-composer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--glass-border);
+  box-sizing: border-box;
+  max-width: 100%;
+}
+.ai-panel-input {
+  flex: 1;
+  min-width: 0;
+  max-height: 120px;
+  resize: none;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+.ai-panel-input:focus { outline: none; border-color: var(--accent); }
+.ai-panel-send-btn {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ai-panel-send-btn.hidden { display: none; }
+.ai-panel-stop-btn { background: var(--danger); }
+
+/* Desktop: render as a floating card instead of a full-screen sheet */
+@media (min-width: 640px) {
+  .ai-panel-overlay {
+    align-items: flex-end;
+    justify-content: flex-end;
+    background: transparent;
+    backdrop-filter: none;
+    padding: 24px;
+    pointer-events: none;
+  }
+  .ai-panel {
+    pointer-events: auto;
+    width: 380px;
+    max-width: calc(100vw - 48px);
+    height: 560px;
+    max-height: calc(100vh - 48px);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+  }
+  .ai-panel-header { padding-top: 14px; }
+}
+
+/* Extra-narrow phones: keep everything inside the viewport with no overflow */
+@media (max-width: 360px) {
+  .ai-fab { right: 12px; width: 46px; height: 46px; font-size: 19px; }
+  .ai-msg-bubble { max-width: 92%; font-size: 13.5px; }
+}

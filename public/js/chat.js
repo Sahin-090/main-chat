@@ -53,7 +53,7 @@ async function bootstrap() {
   // first time only happens from the explicit Notification Settings toggle
   // (Push.requestAndSubscribe), which is a real user gesture.
   Push.init(); // silently re-subscribes to Web Push if permission was already granted in a past session
-  connectSocket();
+  await connectSocket();
   await loadMutedChats();
   await loadConversations();
   await loadGroups();
@@ -115,7 +115,26 @@ function openChatFromUrl(url) {
 
 let socketWasConnected = false;
 
-function connectSocket() {
+// Loads the socket.io client script from the backend's own origin (needed
+// when the frontend is hosted separately, e.g. Vercel + Railway - the
+// static `<script src="/socket.io/...">` tag only works same-origin).
+// When BACKEND_URL is '' (default, same-origin setup) this is a no-op if
+// the script is already on the page, and otherwise loads it from '' (i.e.
+// the current origin), which is identical to the old static tag.
+function loadSocketIoScript() {
+  if (window.io) return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = (window.BACKEND_URL || '') + '/socket.io/socket.io.js';
+    script.onload = resolve;
+    script.onerror = () => reject(new Error('Failed to load socket.io client.'));
+    document.head.appendChild(script);
+  });
+}
+
+async function connectSocket() {
+  await loadSocketIoScript();
+
   // Guard against duplicate connections if connectSocket is ever called twice.
   if (socket) {
     socket.removeAllListeners();
@@ -123,7 +142,7 @@ function connectSocket() {
   }
 
   const token = localStorage.getItem('scs_access_token');
-  socket = io({
+  socket = io(window.BACKEND_URL || undefined, {
     withCredentials: true,
     auth: { token },
     transports: ['websocket', 'polling'], // fall back to polling if WS is blocked
@@ -205,6 +224,9 @@ async function logout() {
   } catch (e) { /* ignore */ }
   localStorage.removeItem('scs_user');
   localStorage.removeItem('scs_access_token');
+  Object.keys(localStorage)
+    .filter((k) => k.startsWith('scs_ai_history_'))
+    .forEach((k) => localStorage.removeItem(k));
   window.location.href = '/';
 }
 
@@ -1875,3 +1897,35 @@ function bindGlobalUI() {
     }
   }, 30000);
 }
+
+// ============================================================
+// AI Assistant integration hook (additive only - does not change any
+// existing chat behaviour). Exposes a read-only snapshot of state that is
+// already loaded/authorized for this user, so the AI Assistant module can
+// build its request context without any extra network calls or by ever
+// reaching into data the user isn't already seeing on screen.
+// ============================================================
+window.ScsAI = window.ScsAI || {};
+window.ScsAI.getContext = function getScsAiContext() {
+  const safeConversations = (conversationsCache || []).slice(0, 25).map((c) => ({
+    id: c.id,
+    displayName: c.other_display_name,
+    username: c.other_username,
+    online: !!c.other_is_online,
+  }));
+  const safeGroups = (groupsCache || []).slice(0, 25).map((g) => ({
+    id: g.id,
+    name: g.name,
+    description: g.description || null,
+  }));
+
+  return {
+    user: me ? { id: me.id, username: me.username, displayName: me.displayName, role: me.role } : null,
+    activeChat: activeChat ? { type: activeChat.type, id: activeChat.id, name: activeChat.name } : null,
+    conversations: safeConversations,
+    groups: safeGroups,
+    mutedChats: mutedChatKeys ? Array.from(mutedChatKeys) : [],
+    theme: (typeof Theme !== 'undefined' && Theme.get) ? Theme.get() : (localStorage.getItem('scs_theme') || 'dark'),
+    route: window.location.pathname,
+  };
+};

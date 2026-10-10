@@ -52,6 +52,12 @@ const config = {
   cookie: {
     secret: required('COOKIE_SECRET', 'insecure_dev_cookie_secret_change_me'),
     secure: required('COOKIE_SECURE', 'false') === 'true',
+    // 'strict' (default) = unchanged same-origin behaviour, exactly as before.
+    // Set COOKIE_SAME_SITE=none (and COOKIE_SECURE=true) ONLY when the
+    // frontend is hosted on a different domain than this backend (e.g.
+    // frontend on Vercel, backend on Railway) - browsers refuse to send
+    // 'strict'/'lax' cookies cross-site, which would otherwise break login.
+    sameSite: required('COOKIE_SAME_SITE', 'strict'),
   },
 
   bcrypt: {
@@ -88,6 +94,14 @@ const config = {
     publicKey: required('VAPID_PUBLIC_KEY', ''),
     privateKey: required('VAPID_PRIVATE_KEY', ''),
     subject: required('VAPID_SUBJECT', 'mailto:admin@example.com'),
+  },
+
+  // AI Assistant - the frontend calls this Cloudflare Worker directly
+  // (browser -> Worker -> Groq). The Worker URL is not a secret, but we
+  // still keep it configurable so it can be changed without a redeploy of
+  // the frontend, and so its origin can be added to CSP connect-src below.
+  ai: {
+    workerUrl: required('AI_WORKER_URL', 'https://chat.smai-api-core.workers.dev'),
   },
 
   // Network / reverse-proxy tuning (Railway, Render, Nginx, Cloudflare, etc.)

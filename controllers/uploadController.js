@@ -30,7 +30,15 @@ async function uploadFile(req, res, next) {
       });
     }
 
-    const relativePath = `/uploads/${dir}/${req.file.filename}`;
+    // Absolute URL, built from the actual incoming request (req.protocol
+    // already respects X-Forwarded-Proto via 'trust proxy'), so uploaded
+    // files display correctly even when the frontend is hosted on a
+    // different domain than this backend (e.g. frontend on Vercel, backend
+    // on Railway). Using the request itself - instead of the APP_URL env
+    // var - means nothing changes for existing same-origin deployments,
+    // whatever domain they actually run on.
+    const origin = `${req.protocol}://${req.get('host')}`;
+    const relativePath = `${origin}/uploads/${dir}/${req.file.filename}`;
 
     await logActivity(req.user.id, 'file_upload', {
       fileName: req.file.originalname,

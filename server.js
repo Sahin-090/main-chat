@@ -108,7 +108,8 @@ app.use(
         ],
         connectSrc: [
           "'self'",
-          ...config.clientOrigins
+          ...config.clientOrigins,
+          config.ai.workerUrl,
         ],
       },
     },
@@ -201,6 +202,12 @@ app.use(
   app.use('/api/uploads', uploadRoutes);
   app.use('/api/admin', adminRoutes);
   app.use('/api/notifications', notificationRoutes);
+
+  // Public, non-sensitive runtime config for the frontend (e.g. the AI
+  // Assistant's Worker URL). Contains nothing secret - safe without auth.
+  app.get('/api/public-config', (req, res) => {
+    res.json({ success: true, aiWorkerUrl: config.ai.workerUrl });
+  });
 
   app.get('/api/health', (req, res) => {
     res.json({ success: true, status: 'ok', timestamp: new Date().toISOString() });

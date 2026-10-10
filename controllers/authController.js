@@ -9,7 +9,7 @@ function cookieOptions(maxAgeMs) {
   return {
     httpOnly: true,
     secure: config.cookie.secure,
-    sameSite: 'strict',
+    sameSite: config.cookie.sameSite,
     maxAge: maxAgeMs,
     path: '/',
   };

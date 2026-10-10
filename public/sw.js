@@ -20,7 +20,7 @@
 // PWA / mobile browser to drop its old cached shell on next load instead of
 // silently keeping stale HTML/CSS/JS around - see the note on the static
 // asset Cache-Control headers in server.js for the other half of this fix.
-const CACHE_VERSION = 'cute-shell-v2';
+const CACHE_VERSION = 'cute-shell-v3';
 const APP_SHELL = [
   '/',
   '/chat',

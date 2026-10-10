@@ -14,12 +14,13 @@
  * the header either, which defeats classic CSRF forgery.
  */
 const crypto = require('crypto');
+const config = require('../config');
 
 function issueCsrfToken(req, res, next) {
   const token = crypto.randomBytes(32).toString('hex');
   res.cookie('csrf_token', token, {
     httpOnly: false,
-    sameSite: 'strict',
+    sameSite: config.cookie.sameSite,
     secure: req.app.get('cookieSecure'),
     maxAge: 1000 * 60 * 60 * 2, // 2 hours
   });

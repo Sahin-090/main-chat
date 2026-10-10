@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" class="legal-html">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — Cute</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css?v=2">
+<link rel="stylesheet" href="/css/legal.css?v=1">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+</head>
+<body data-theme="dark" class="legal-body">
+
+<header class="legal-header glass">
+  <a href="/" class="legal-header-brand">
+    <span class="logo-badge">🔐</span>
+    <span>Cute</span>
+  </a>
+  <div class="legal-header-actions">
+    <a href="/privacy.html" class="active">Privacy Policy</a>
+    <a href="/terms.html">Terms &amp; Conditions</a>
+    <button class="btn-icon glass" onclick="Theme.toggle()" aria-label="Toggle theme">
+      <span class="theme-icon">🌙</span>
+    </button>
+  </div>
+</header>
+
+<main class="legal-shell">
+  <div class="legal-card glass">
+    <h1>Privacy Policy</h1>
+    <div class="legal-updated">Last updated: September 16, 2026</div>
+
+    <div class="legal-intro">
+      Cute is a real-time chat application built around a <strong>temporary, privacy-first</strong> data
+      model. This Privacy Policy explains, in plain and accurate terms, what information Cute
+      collects, how it is used and stored, how long it is kept, and the choices available to you.
+      We describe our actual technical implementation here — we do not make claims about
+      protections that are not really in place.
+    </div>
+
+    <ul class="legal-toc">
+      <li><a href="#collect"><span class="legal-toc-num">1.</span>Information We Collect</a></li>
+      <li><a href="#messaging"><span class="legal-toc-num">2.</span>Messages, Photos, Audio &amp; Video</a></li>
+      <li><a href="#not-collected"><span class="legal-toc-num">3.</span>Information We Don't Intentionally Collect</a></li>
+      <li><a href="#use"><span class="legal-toc-num">4.</span>How We Use Information</a></li>
+      <li><a href="#security"><span class="legal-toc-num">5.</span>Encryption &amp; Security</a></li>
+      <li><a href="#retention"><span class="legal-toc-num">6.</span>Temporary Data &amp; 30-Day Retention</a></li>
+      <li><a href="#account-lifecycle"><span class="legal-toc-num">7.</span>Account Lifecycle</a></li>
+      <li><a href="#cookies"><span class="legal-toc-num">8.</span>Cookies &amp; Local Storage</a></li>
+      <li><a href="#device-ip"><span class="legal-toc-num">9.</span>Device, Browser &amp; IP Logging</a></li>
+      <li><a href="#third-party"><span class="legal-toc-num">10.</span>Third-Party Services</a></li>
+      <li><a href="#sharing"><span class="legal-toc-num">11.</span>Data Access, Sharing &amp; Legal Requests</a></li>
+      <li><a href="#backups"><span class="legal-toc-num">12.</span>Backups &amp; Disaster Recovery</a></li>
+      <li><a href="#incidents"><span class="legal-toc-num">13.</span>Security Incident Handling</a></li>
+      <li><a href="#rights"><span class="legal-toc-num">14.</span>Your Privacy Rights</a></li>
+      <li><a href="#children"><span class="legal-toc-num">15.</span>Children's Privacy</a></li>
+      <li><a href="#international"><span class="legal-toc-num">16.</span>International Users</a></li>
+      <li><a href="#changes"><span class="legal-toc-num">17.</span>Changes to This Policy</a></li>
+      <li><a href="#contact"><span class="legal-toc-num">18.</span>Contact</a></li>
+    </ul>
+
+    <section class="legal-section" id="collect">
+      <h2><span class="legal-section-num">1.</span>Information We Collect</h2>
+      <p>To create and operate your account, Cute collects:</p>
+      <ul>
+        <li><strong>Username</strong> — a unique identifier you choose to sign in with.</li>
+        <li><strong>Password</strong> — never stored in plain text. Your password is hashed using
+          the industry-standard <strong>bcrypt</strong> algorithm before it is saved; the original
+          password is never retained.</li>
+        <li><strong>Display name</strong> (optional) — shown to other users instead of your username.</li>
+        <li><strong>Avatar</strong> (optional) — a colour swatch or an image you choose to upload.</li>
+        <li><strong>Account role, online/last-seen status, and notification preferences</strong> — needed
+          to run the real-time chat and notification features.</li>
+      </ul>
+      <p>We intentionally ask for the minimum information required to run a messaging account — we
+        do not require your real name, phone number, or email address to register.</p>
+    </section>
+
+    <section class="legal-section" id="messaging">
+      <h2><span class="legal-section-num">2.</span>Messages, Photos, Audio &amp; Video</h2>
+      <p>Cute lets you send text messages, photos, voice/audio messages, video, and other file
+        attachments in one-to-one and group chats in real time. To deliver these features we store:</p>
+      <ul>
+        <li>Message text content, timestamps, edit history flags, and delivery/read receipts.</li>
+        <li>Uploaded media files (images, audio, video, and other attachments), saved under a
+          randomly generated, non-guessable filename rather than your original filename.</li>
+        <li>Metadata needed to route messages correctly — sender, recipient/group, chat type,
+          reply references, and file size/type.</li>
+      </ul>
+      <p>This content is transmitted between your device and our servers over an encrypted
+        connection (see Section 5) and is stored so that the recipient(s) can retrieve it, and so
+        that features like "delete for me" / "delete for everyone", edit history, and message
+        search can work.</p>
+    </section>
+
+    <section class="legal-section" id="not-collected">
+      <h2><span class="legal-section-num">3.</span>Information We Don't Intentionally Collect</h2>
+      <p>Cute does not ask for or intentionally collect:</p>
+      <ul>
+        <li>Your real name, government ID, or physical address.</li>
+        <li>Phone number or email address at registration.</li>
+        <li>Precise device location (GPS).</li>
+        <li>Contacts, photos, or files on your device beyond what you deliberately choose to upload.</li>
+        <li>Payment or financial information (Cute does not currently process payments).</li>
+      </ul>
+    </section>
+
+    <section class="legal-section" id="use">
+      <h2><span class="legal-section-num">4.</span>How We Use Information</h2>
+      <p>We use the information described above only to:</p>
+      <ul>
+        <li>Authenticate you and keep your account secure.</li>
+        <li>Deliver real-time messages, media, presence status, and notifications.</li>
+        <li>Operate core chat features (search, reply, edit, delete, read receipts, groups).</li>
+        <li>Detect and prevent abuse, spam, and security threats.</li>
+        <li>Maintain and troubleshoot the service.</li>
+      </ul>
+      <p>We do not sell your information, and we do not use your message content to serve
+        advertising.</p>
+    </section>
+
+    <section class="legal-section" id="security">
+      <h2><span class="legal-section-num">5.</span>Encryption &amp; Security</h2>
+      <p>We want to be precise here rather than make broad marketing claims. Cute's current,
+        actual security implementation includes:</p>
+      <ul>
+        <li><strong>Encryption in transit:</strong> all traffic between your device and our
+          servers — including chat messages sent over the real-time connection — travels over
+          HTTPS/TLS and secure WebSockets (WSS).</li>
+        <li><strong>Password hashing:</strong> passwords are hashed with bcrypt before storage;
+          Cute itself never has access to your plain-text password.</li>
+        <li><strong>Access controls:</strong> authentication tokens and session checks gate access
+          to your messages and account data; standard web-application protections (rate limiting,
+          CSRF protection, and security headers) are applied to our API.</li>
+        <li><strong>Media storage:</strong> uploaded files are saved under randomly generated
+          filenames rather than their original names, reducing the chance of a file being guessed
+          or discovered.</li>
+      </ul>
+      <div class="legal-callout">
+        <strong>On "end-to-end encryption":</strong> message and media content is currently
+        encrypted in transit (HTTPS/WSS) but is not end-to-end encrypted at the application layer —
+        meaning message content is stored on our servers in a form our infrastructure can process
+        (for example, to support search, edit, and delivery features), rather than being
+        unreadable to the server itself. If and when true end-to-end encryption of message content
+        is implemented, this policy will be updated to reflect it. We will not describe the service
+        as "100% secure," "unhackable," or guaranteed leak-proof — no online service can honestly
+        make that promise, and Cute doesn't either.</div>
+    </section>
+
+    <section class="legal-section" id="retention">
+      <h2><span class="legal-section-num">6.</span>Temporary Data &amp; 30-Day Retention</h2>
+      <p>Cute is designed as a <strong>temporary</strong> chat service, not a permanent archive.
+        The service's data-retention target is:</p>
+      <ul>
+        <li>Messages are intended to be automatically and permanently deleted approximately
+          <strong>30 days</strong> after they are sent.</li>
+        <li>Photos, audio, video, and other attached files are intended to follow the same 30-day
+          lifecycle and be permanently removed from storage, not merely hidden from view.</li>
+        <li>You can also manually delete a message ("delete for me" or "delete for everyone")
+          at any time, independent of the 30-day cycle.</li>
+      </ul>
+      <div class="legal-callout">
+        <strong>Please note:</strong> automatic, scheduled 30-day deletion is the retention policy
+        Cute is built around, but it is an operational process that is still being rolled out on
+        the backend. Until it is fully active, please do not treat the 30-day window as an
+        absolute technical guarantee — if you need something gone immediately, use the in-app
+        delete option, and avoid sending anything in chat that you would not want retained longer
+        than expected. We will update this section once automatic expiry is fully enforced.
+      </div>
+      <p>Some data falls outside the 30-day chat-content policy and is handled separately —
+        see Sections 9 (device/IP logging) and 12 (backups) below. We do not claim that
+        <em>literally everything</em> is deleted if security, abuse-prevention, or legally
+        required records must be kept for a period.</p>
+    </section>
+
+    <section class="legal-section" id="account-lifecycle">
+      <h2><span class="legal-section-num">7.</span>Account Lifecycle</h2>
+      <p>Your account itself is separate from your messages: your account (username, password
+        hash, profile info) persists for as long as your account remains active. Account
+        expiration, message expiration, media expiration, and security/operational logs are each
+        governed by their own rules described in this policy — we do not lump them together.</p>
+    </section>
+
+    <section class="legal-section" id="cookies">
+      <h2><span class="legal-section-num">8.</span>Cookies &amp; Local Storage</h2>
+      <p>Cute uses cookies and your browser's local storage for functional purposes only —
+        not advertising or third-party tracking:</p>
+      <ul>
+        <li>Session/authentication cookies and tokens, used to keep you signed in and to protect
+          state-changing requests (CSRF protection).</li>
+        <li>Local storage entries for your signed-in session details and your light/dark theme
+          preference, kept on your own device.</li>
+      </ul>
+    </section>
+
+    <section class="legal-section" id="device-ip">
+      <h2><span class="legal-section-num">9.</span>Device, Browser &amp; IP Logging</h2>
+      <p>When you use Cute, our servers technically receive your IP address and basic
+        request/browser information as part of normal web traffic, and this may be recorded in
+        operational activity logs (for example, alongside actions like login or file upload) for
+        security, abuse-prevention, and troubleshooting purposes. If you enable push
+        notifications, we also store the browser-provided push subscription details needed to
+        deliver them to your device. These operational/security logs are handled separately from
+        the 30-day chat-content retention described in Section 6, and may be kept for a longer
+        operational period where reasonably necessary for security and abuse prevention.</p>
+    </section>
+
+    <section class="legal-section" id="third-party">
+      <h2><span class="legal-section-num">10.</span>Third-Party Services</h2>
+      <p>Cute relies on a small number of third-party infrastructure providers to operate:</p>
+      <ul>
+        <li><strong>Hosting &amp; database providers</strong>, who run the servers and database
+          that store your account, messages, and media.</li>
+        <li><strong>Push notification delivery</strong>, via your browser/OS's push service, used
+          only to deliver notifications you've opted into.</li>
+        <li><strong>AI Assistant feature</strong>: if you use Cute's built-in AI Assistant, the
+          message you send it and the limited application context needed to answer you are
+          relayed through a proxy service to a third-party AI model provider in order to generate
+          a response. Ordinary chat messages between users are not sent to this AI provider unless
+          you specifically use the AI Assistant feature.</li>
+      </ul>
+      <p>These providers process data only as needed to perform their function for Cute and are
+        not authorised to use it for their own independent purposes.</p>
+    </section>
+
+    <section class="legal-section" id="sharing">
+      <h2><span class="legal-section-num">11.</span>Data Access, Sharing &amp; Legal Requests</h2>
+      <p>We do not sell or rent your personal information. Limited internal access to account and
+        message data is restricted to what is necessary for operating and securing the service
+        (for example, investigating abuse reports). We may disclose information where required by
+        applicable law, a valid legal request, or where necessary to investigate suspected abuse,
+        fraud, or a security incident affecting the service or its users.</p>
+    </section>
+
+    <section class="legal-section" id="backups">
+      <h2><span class="legal-section-num">12.</span>Backups &amp; Disaster Recovery</h2>
+      <p>Cute does not currently maintain a separate, long-term backup archive of chat content
+        beyond what our hosting/database provider may retain briefly for its own operational
+        disaster-recovery purposes. If that changes, backup copies will be subject to their own
+        expiration schedule, and this policy will be updated to describe it accurately.</p>
+    </section>
+
+    <section class="legal-section" id="incidents">
+      <h2><span class="legal-section-num">13.</span>Security Incident Handling</h2>
+      <p>If we become aware of a security incident that affects your account or message data, we
+        will take reasonable steps to investigate, contain, and remediate it, and to notify
+        affected users where appropriate and required by law.</p>
+    </section>
+
+    <section class="legal-section" id="rights">
+      <h2><span class="legal-section-num">14.</span>Your Privacy Rights</h2>
+      <p>You may request access to, correction of, or deletion of your account data by contacting
+        us using the details in Section 18. You can also delete individual messages yourself at
+        any time through the in-app delete options, and stop using push notifications by
+        disabling them in your device/browser settings.</p>
+    </section>
+
+    <section class="legal-section" id="children">
+      <h2><span class="legal-section-num">15.</span>Children's Privacy</h2>
+      <p>Cute is not directed at children, and we do not knowingly allow children under the
+        minimum age required by applicable local law to create an account. If you believe a
+        child has created an account, please contact us so we can review and, where appropriate,
+        remove it.</p>
+    </section>
+
+    <section class="legal-section" id="international">
+      <h2><span class="legal-section-num">16.</span>International Users</h2>
+      <p>If you use Cute from outside the country where our servers are hosted, your information
+        will be processed and stored in that hosting location, which may have different data
+        protection laws than your own country.</p>
+    </section>
+
+    <section class="legal-section" id="changes">
+      <h2><span class="legal-section-num">17.</span>Changes to This Policy</h2>
+      <p>We may update this Privacy Policy as the service evolves — for example, as retention
+        automation or encryption features described above are completed. We will update the "Last
+        updated" date above when we do, and material changes will be reflected here.</p>
+    </section>
+
+    <section class="legal-section" id="contact">
+      <h2><span class="legal-section-num">18.</span>Contact</h2>
+      <p>Questions about this Privacy Policy or your data can be directed to the Cute development
+        team via the contact details on our
+        <a href="https://github.com/Sahin-090" target="_blank" rel="noopener">GitHub profile</a>.</p>
+    </section>
+  </div>
+</main>
+
+<footer class="legal-footer">
+  <div class="legal-footer-brand">Cute</div>
+  <div class="legal-footer-tagline">Privacy-first temporary real-time chat.</div>
+  <div class="legal-footer-links">
+    <a href="/privacy.html">Privacy Policy</a><span class="sep">·</span>
+    <a href="/terms.html">Terms &amp; Conditions</a><span class="sep">·</span>
+    <a href="/">Back to Cute</a>
+  </div>
+  <div class="legal-credit">
+    <div class="legal-credit-title">DESIGNED &amp; DEVELOPED BY</div>
+    <div class="legal-credit-name">Sahin</div>
+    <div class="legal-credit-links">
+      <a href="https://instagram.com/Sahin_09022" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://t.me/Sahin_09022" target="_blank" rel="noopener">Telegram</a>
+      <a href="https://github.com/Sahin-090" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/ui-helpers.js?v=2"></script>
+</body>
+</html>
