@@ -1,5 +1,5 @@
 # 🔐 Secure Chat Server
-<img width="340" height="360" alt="WhatsApp Image 2026-10-10 at 8 11 16 AM" src="https://github.com/user-attachments/assets/e90159c9-9aa0-4cb4-ada1-14207ab650d8" />
+<img width="345" height="360" alt="WhatsApp Image 2026-10-10 at 8 11 16 AM" src="https://github.com/user-attachments/assets/e90159c9-9aa0-4cb4-ada1-14207ab650d8" />
 
 A production-ready, real-time private + group chat server built with **Node.js, Express, Socket.IO, and MySQL**. Includes JWT auth, bcrypt password hashing, file sharing, typing indicators, read receipts, an admin dashboard, and a mobile-first glassmorphism UI with dark/light mode.
 
