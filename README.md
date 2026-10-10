@@ -1,4 +1,5 @@
 # 🔐 Secure Chat Server
+<img width="340" height="360" alt="WhatsApp Image 2026-10-10 at 8 11 16 AM" src="https://github.com/user-attachments/assets/e90159c9-9aa0-4cb4-ada1-14207ab650d8" />
 
 A production-ready, real-time private + group chat server built with **Node.js, Express, Socket.IO, and MySQL**. Includes JWT auth, bcrypt password hashing, file sharing, typing indicators, read receipts, an admin dashboard, and a mobile-first glassmorphism UI with dark/light mode.
 
@@ -40,6 +41,7 @@ A production-ready, real-time private + group chat server built with **Node.js, 
 ---
 
 ## 📁 Project Structure
+<img width="360" height="365" alt="WhatsApp Image 2026-10-10 at 8 20 36 AM" src="https://github.com/user-attachments/assets/ee8871ff-a545-4167-af26-9e4172bd32ff" />
 
 ```
 secure-chat-server/
@@ -145,7 +147,8 @@ connection alone can't do this once the OS suspends the page's JS.
 - **CSRF 403 errors** → the frontend must call `GET /api/auth/csrf-token` before any POST (the bundled `public/js/api.js` already does this automatically).
 - **Uploads failing on Render** → Render's filesystem is ephemeral; see [docs/RENDER_DEPLOY.md](docs/RENDER_DEPLOY.md) for persistent-storage notes.
 
----
+---<img width="360" height="370" alt="WhatsApp Image 2026-10-10 at 8 11 17 AM" src="https://github.com/user-attachments/assets/8892cbd4-b56f-40d5-a817-4635e76b94a2" />
+
 
 ## 📜 License
 
