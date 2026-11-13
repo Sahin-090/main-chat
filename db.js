@@ -136,6 +136,23 @@ async function runSchema() {
 
 async function initDb() {
 
+  // Startup diagnostics (never prints the password itself)
+  console.log("[DB] Config:", {
+    host: config.db.host,
+    port: config.db.port,
+    user: config.db.user,
+    database: config.db.database,
+    hasPassword: !!config.db.password,
+  });
+
+  if (config.db.host === "localhost" || config.db.host === "127.0.0.1") {
+    console.warn("[DB] WARNING: DB_HOST is localhost. On Railway set DB_HOST to the MySQL private domain (e.g. mysql.railway.internal).");
+  }
+
+  if (!config.db.password) {
+    throw new Error("DB_PASSWORD is empty. Set DB_PASSWORD in the app service Variables (copy MYSQLPASSWORD from the MySQL service) and redeploy.");
+  }
+
   await ensureDatabaseExists();
 
   pool = mysql.createPool({
