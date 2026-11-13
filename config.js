@@ -17,9 +17,9 @@ function required(name, fallback) {
 const config = {
   env: required('NODE_ENV', 'development'),
   port: parseInt(required('PORT', '5000'), 10),
-  appUrl: required('APP_URL', 'http://localhost:5000'),
+  appUrl: required('APP_URL', 'https://main-chat-production.up.railway.app'),
 
-  clientOrigins: required('CLIENT_ORIGINS', 'http://localhost:5000')
+  clientOrigins: required('CLIENT_ORIGINS', 'https://sm-live-chat.vercel.app')
     .split(',')
     .map((o) => o.trim())
     .filter(Boolean),
